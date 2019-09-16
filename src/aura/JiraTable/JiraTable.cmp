@@ -1,0 +1,45 @@
+<aura:component description="JiraTable" controller="JiraController">
+    <aura:attribute name="mainTable" type="List"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <form class="slds-form--stacked">
+    <table class="slds-table slds-table_bordered slds-table_striped slds-table_cell-buffer slds-table_fixed-layout">
+        <thead>
+        <tr class="slds-text-heading_label">
+            <th scope="col">
+                <div class="slds-truncate" title="ID">Name</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate" title="MWB">Money With Bonus</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate" title="MWT">Money With Tax</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate" title="OBM">Only Bonus Money</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate" title="AllHours">All Hours</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate" title="Tax">Clear Money</div>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <aura:iteration items="{!v.mainTable}" var="ct">
+            <tr>
+                <th scope="row">
+                    <div class="slds-truncate" title="{!ct.Name}">{!ct.Name}</div>
+                </th>
+                <td>
+                    <div class="slds-truncate" aura:id="iter" title="{!ct.MoneyWithBonus__c}">{!ct.MoneyWithBonus__c}</div>
+                </td>
+                <td>
+                    <div class="slds-truncate" aura:id="bonus" title="{!ct.AssistantName}">{!ct.AssistantName}</div>
+                </td>
+            </tr>
+        </aura:iteration>
+        </tbody>
+    </table>
+    </form>
+</aura:component>
