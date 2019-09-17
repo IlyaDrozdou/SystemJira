@@ -1,0 +1,6 @@
+<!--
+ - Created by user on 08-Sep-19.
+ -->
+
+<aura:component description="expenseItem">
+</aura:component>

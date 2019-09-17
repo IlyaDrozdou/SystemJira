@@ -1,6 +1,48 @@
 <aura:component description="JiraTable" controller="JiraController">
     <aura:attribute name="mainTable" type="List"/>
+    <aura:attribute name="miniTable" type="List"/>
+    <aura:attribute name="isModalOpen" type="boolean" default="false"/>
+
+    <aura:attribute name="allData" type="List"/>
+    <aura:attribute name="currentPageNumber" type="Integer" default="1"/>
+    <aura:attribute name="pageSize" type="Integer" default="10"/>
+    <aura:attribute name="totalPages" type="Integer" default="0"/>
+
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:if isTrue="{!v.isModalOpen}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeModel }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Detail Information {!v.miniTable[0].Name}</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <p> Rat Per Hour : {!v.miniTable[0].RPH} dollors in hour</p>
+                    <p> Hours With Bonus : {!v.miniTable[0].HWB} hours</p>
+                    <p> Hours Without Bonus : {!v.miniTable[0].HWOB} hours</p>
+                    <p> Tax : {!v.miniTable[0].TAX} $</p>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral"
+                                      label="Cancel"
+                                      title="Cancel"
+                                      onclick="{! c.closeModel }"/>
+                    <lightning:button variant="brand"
+                                      label="OK"
+                                      title="OK"
+                                      onclick="{!c.submitDetails}"/>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+
+
     <form class="slds-form--stacked">
     <table class="slds-table slds-table_bordered slds-table_striped slds-table_cell-buffer slds-table_fixed-layout">
         <thead>
@@ -9,19 +51,16 @@
                 <div class="slds-truncate" title="ID">Name</div>
             </th>
             <th scope="col">
-                <div class="slds-truncate" title="MWB">Money With Bonus</div>
-            </th>
-            <th scope="col">
-                <div class="slds-truncate" title="MWT">Money With Tax</div>
+                <div class="slds-truncate" title="AllHours">All Hours</div>
             </th>
             <th scope="col">
                 <div class="slds-truncate" title="OBM">Only Bonus Money</div>
             </th>
             <th scope="col">
-                <div class="slds-truncate" title="AllHours">All Hours</div>
+                <div class="slds-truncate" title="MWB">Money With Bonus</div>
             </th>
             <th scope="col">
-                <div class="slds-truncate" title="Tax">Clear Money</div>
+                <div class="slds-truncate" title="MWT">Money With Tax</div>
             </th>
         </tr>
         </thead>
@@ -29,16 +68,35 @@
         <aura:iteration items="{!v.mainTable}" var="ct">
             <tr>
                 <th scope="row">
-                    <div class="slds-truncate" title="{!ct.Name}">{!ct.Name}</div>
+                    <div class="slds-truncate" onclick="{!c.openModel}" id="{!ct.Id}" title="{!ct.Name}">{!ct.Name}</div>
                 </th>
                 <td>
-                    <div class="slds-truncate" aura:id="iter" title="{!ct.MoneyWithBonus__c}">{!ct.MoneyWithBonus__c}</div>
+                    <div class="slds-truncate" aura:id="iter" title="{!ct.Hours}">{!ct.Hours}</div>
                 </td>
                 <td>
-                    <div class="slds-truncate" aura:id="bonus" title="{!ct.AssistantName}">{!ct.AssistantName}</div>
+                    <div class="slds-truncate" aura:id="bonus" title="{!ct.JBM}">{!ct.JBM}</div>
+                </td>
+                <td>
+                    <div class="slds-truncate" aura:id="bonus" title="{!ct.MWB}">{!ct.MWB}</div>
+                </td>
+                <td>
+                    <div class="slds-truncate" aura:id="bonus" title="{!ct.MWT}">{!ct.MWT}</div>
                 </td>
             </tr>
         </aura:iteration>
+
+        <span class="slds-p-horizontal_xxx-small">
+                    <a>...</a>
+                </span>
+        <span class="slds-p-horizontal_x-small">
+                    <a onclick="{!c.processMe}" name="{!v.totalPages}"
+                       class="{! (v.currentPageNumber == v.totalPages) ? 'selected' : ''}">{!v.totalPages}</a>
+                </span>
+        <lightning:button iconName="utility:chevronright" iconPosition="right"
+                          disabled="{! v.currentPageNumber == v.totalPages}" onclick="{!c.onNext}"/>
+        <lightning:button label="Last" iconName="utility:right" iconPosition="right"
+                          disabled="{! v.currentPageNumber == v.totalPages}" onclick="{!c.onLast}"/>
+
         </tbody>
     </table>
     </form>

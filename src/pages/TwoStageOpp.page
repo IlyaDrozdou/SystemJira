@@ -1,0 +1,14 @@
+<apex:page controller="MyContr">
+        <apex:pageBlock title="CLOSED DATE">
+        <apex:pageBlockTable value="{!acct}" title="TABLE" var="a">
+
+
+            <apex:column value="{!a.IsPrivate}"/>
+            <apex:column value="{!a.StageName}"/>
+
+
+
+
+        </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:page>

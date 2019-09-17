@@ -1,0 +1,16 @@
+<aura:component>
+    <aura:attribute name="camp" type="Camping_Item__c"/>
+
+    <lightning:card title="{!v.camp.Name}" iconName="action:goal"
+                    class="{!v.camp.Reimbursed__c ?
+                           'slds-theme--success' : ''}">
+   
+        <p class="slds-text-heading--medium slds-p-horizontal--small">
+           Qantity: <lightning:formattedNumber value="{!v.camp.Quantity__c}"/>
+        </p>
+        <p class="slds-text-heading--medium slds-p-horizontal--small">
+            Price: <lightning:input value="{!v.camp.Price__c}"/>
+        </p>
+        
+    </lightning:card>
+</aura:component>
